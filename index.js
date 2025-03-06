@@ -34,7 +34,7 @@ try {
     }))
 }
 
-const todos = [];
+let todos = [];
 
 HTTP_SERVER.get("/", function (request, response) {
     return response.status(201).json({
@@ -48,6 +48,30 @@ HTTP_SERVER.get("/todos", function (request, response) {
         data: todos
     })
 })
+
+HTTP_SERVER.get("/todo/:todoId", function (request, response) {
+   const { todoId } = request.params; // gets url params *required
+   const queryParams = request.query; // get query params (optional)
+   if(!todoId) {
+        return response.status(400).json({
+            message: "Necessary input is missing in request"
+        })
+   } else {
+        const matchedTodo = todos.find((todo) => todo.id === todoId);
+        if(matchedTodo) {
+            return response.status(200).json({
+                message: "Todo fetched successfully",
+                todo: matchedTodo
+            })
+        } else {
+            return response.status(200).json({
+                message: "No Todo found",
+                todo: matchedTodo
+            })
+        }
+   }
+})
+
 
 HTTP_SERVER.post("/createTodo", function (request, response) {
     if(!request.body.title || !request.body.description) {
@@ -71,8 +95,17 @@ HTTP_SERVER.patch("/updateTodo", function (request, response) {
     })
 })
 
-HTTP_SERVER.delete("/deleteTodo", function (request, response) {
-    return response.status(200).json({
-        message: "Todos deleted successfully",
-    })
+HTTP_SERVER.delete("/deleteTodo/:todoId", function (request, response) {
+    const {todoId} = request.params;
+    if(!todoId) {
+        return response.status(400).json({
+            message: "Necessary input is missing in request"
+        })
+   } else {
+        const filteredTodos = todos.filter((todo) => todo.id !== todoId);
+        todos = filteredTodos;
+        return response.status(200).json({
+            message: "Todos deleted successfully",
+        })
+   }
 })

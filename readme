@@ -9,10 +9,10 @@ http://localhost:3000/todos
 http://localhost:3000/createTodo
 
 ## 4. Update a Todos
-http://localhost:3000/updateTodo
+http://localhost:3000/updateTodo/:todoId
 
 ## 5. Delete a Todos
-http://localhost:3000/deleteTodo
+http://localhost:3000/deleteTodo/:todoId
 
 # Create .env file
 Simple create .env file in root of project

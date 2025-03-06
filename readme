@@ -1,0 +1,18 @@
+# API
+## 1.Heart beat
+http://localhost:3000
+
+## 2. Get All Todos
+http://localhost:3000/todos
+
+## 3. Create a Todos
+http://localhost:3000/createTodo
+
+## 4. Update a Todos
+http://localhost:3000/updateTodo
+
+## 5. Delete a Todos
+http://localhost:3000/deleteTodo
+
+# Create .env file
+Simple create .env file in root of project

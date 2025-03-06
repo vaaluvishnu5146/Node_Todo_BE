@@ -1,3 +1,13 @@
+# Steps to run application
+
+git clone https://github.com/vaaluvishnu5146/Node_Todo_BE.git
+
+cd ManageTasks
+
+npm install
+
+npm start
+
 # API
 ## 1.Heart beat
 http://localhost:3000
@@ -16,3 +26,8 @@ http://localhost:3000/deleteTodo/:todoId
 
 # Create .env file
 Simple create .env file in root of project
+
+## And add below data into .env:
+NODE_ENV = production
+HOSTNAME = localhost
+PORT = 3000

@@ -1,16 +1,16 @@
-const TodosResource = require("express").Router();
+const TodosRoute = require("express").Router();
 const { v4: uuid } = require('uuid');
 
 let todos = [];
 
-TodosResource.get("/", function (request, response) {
+TodosRoute.get("/", function (request, response) {
     return response.status(200).json({
         message: "Todos fetched successfully",
         data: todos
     })
 })
 
-TodosResource.get("/todo/:todoId", function (request, response) {
+TodosRoute.get("/todo/:todoId", function (request, response) {
    const { todoId } = request.params; // gets url params *required
    const queryParams = request.query; // get query params (optional)
    if(!todoId) {
@@ -33,7 +33,7 @@ TodosResource.get("/todo/:todoId", function (request, response) {
    }
 })
 
-TodosResource.post("/createTodo", function (request, response) {
+TodosRoute.post("/createTodo", function (request, response) {
     if(!request.body.title || !request.body.description) {
         return response.status(400).json({
             message: "Bad request",
@@ -49,13 +49,13 @@ TodosResource.post("/createTodo", function (request, response) {
     }
 })
 
-TodosResource.patch("/updateTodo", function (request, response) {
+TodosRoute.patch("/updateTodo", function (request, response) {
     return response.status(200).json({
         message: "Todos updated successfully",
     })
 })
 
-TodosResource.delete("/deleteTodo/:todoId", function (request, response) {
+TodosRoute.delete("/deleteTodo/:todoId", function (request, response) {
     const {todoId} = request.params;
     if(!todoId) {
         return response.status(400).json({
@@ -70,4 +70,4 @@ TodosResource.delete("/deleteTodo/:todoId", function (request, response) {
    }
 })
 
-module.exports = TodosResource;
+module.exports = TodosRoute;

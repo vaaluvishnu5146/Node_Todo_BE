@@ -4,7 +4,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Import Resources
-const TodosResource = require("./routes/todos/todos.routes");
+const TodosRoute = require("./routes/todos/todos.routes");
+// Import Resources
+const UsersRoute = require("./routes/users/users.routes");
 
 // 1. Define configs
 const configs = {
@@ -19,7 +21,8 @@ const HTTP_SERVER = express();
 HTTP_SERVER.use(express.json());
 
 // Inject Resources
-HTTP_SERVER.use('/todos', TodosResource)
+HTTP_SERVER.use('/todos', TodosRoute)
+HTTP_SERVER.use('/users', UsersRoute)
 
 // 3. Start and listen to server
 try {

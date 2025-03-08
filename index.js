@@ -1,5 +1,6 @@
 const express = require("express");
 const cowsay = require("cowsay");
+const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -19,6 +20,7 @@ const HTTP_SERVER = express();
 
 // Enable middlewares
 HTTP_SERVER.use(express.json());
+HTTP_SERVER.use(cors());
 
 // Inject Resources
 HTTP_SERVER.use('/todos', TodosRoute)

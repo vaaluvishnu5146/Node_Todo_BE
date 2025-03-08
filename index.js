@@ -11,7 +11,7 @@ const UsersRoute = require("./routes/users/users.routes");
 // 1. Define configs
 const configs = {
     hostName: process.env.HOSTNAME,
-    port: process.env.port
+    port: process.env.PORT
 };
 
 // 2. Create the server

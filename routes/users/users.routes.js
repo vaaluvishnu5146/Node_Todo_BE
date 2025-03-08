@@ -67,7 +67,7 @@ UsersRoute.patch("/updateUser/:userId", function (request, response) {
 })
 
 // DELETE A USER
-UsersRoute.patch("/deleteUser/:userId", function (request, response) {
+UsersRoute.delete("/deleteUser/:userId", function (request, response) {
     const { userId } = request.params;
     if(!userId) {
         return response.status(400).json({

@@ -49,10 +49,20 @@ TodosRoute.post("/createTodo", function (request, response) {
     }
 })
 
-TodosRoute.patch("/updateTodo", function (request, response) {
-    return response.status(200).json({
-        message: "Todos updated successfully",
-    })
+TodosRoute.patch("/updateTodo/:todoId", function (request, response) {
+    const { todoId } = request.params;
+    if(!todoId) {
+        return response.status(400).json({
+            message: "Bad request"
+        })
+    } else {
+        const filteredTodo = users.filter((user) => user.id !== todoId);
+        filteredTodo.push(request.body)
+        todos = filteredTodo;
+        return response
+            .status(201)
+            .json({message: "Todo updated successfully!"})
+    }
 })
 
 TodosRoute.delete("/deleteTodo/:todoId", function (request, response) {

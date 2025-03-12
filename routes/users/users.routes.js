@@ -1,12 +1,19 @@
 const { v4: uuid } = require('uuid');
-
+const Users  = require("./users.model");
 let users = [];
 
 // GET ALL USERS
-function getAllUsers(request, response) {
-    return response
-        .status(200)
-        .json({message: "Users fetched successfully", data: users})
+async function getAllUsers(request, response) {
+    try {
+        const results = await Users.find();
+        return response
+            .status(200)
+            .json({message: "Users fetched successfully", data: results})
+    } catch(error) {
+        return response
+        .status(500)
+        .json({message: "Internal server error", error: error.message})
+    }
 }
 
 // GET A USER
@@ -31,20 +38,18 @@ function getAUser(request, response) {
 }
 
 // CREATE A USER
-function createAUser(request, response) {
-    const { name, email, password } = request.body;
-    if(!name || !email || !password) {
-        return response.status(400).json({
-            message: "Bad request"
-        })
-    } else {
-        users.push({
-            id: uuid(),
-            ...request.body
-        })
+async function createAUser(request, response) {
+    try {
+        const newUser = new Users(request.body);
+        console.log(newUser)
+        const result = await newUser.save();
         return response
-            .status(201)
-            .json({message: "Users created successfully"})
+            .status(200)
+            .json({message: "Users created successfully", result: result})
+    } catch(error) {
+        return response
+        .status(500)
+        .json({message: "Internal server error", error: error.message})
     }
 }
 

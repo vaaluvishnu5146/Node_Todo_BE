@@ -1,13 +1,21 @@
 const TodosRoute = require("express").Router();
 const { v4: uuid } = require('uuid');
+const client = require("../../databaseConfig/mongodbConnectionConfig");
 
 let todos = [];
 
-TodosRoute.get("/", function (request, response) {
-    return response.status(200).json({
-        message: "Todos fetched successfully",
-        data: todos
-    })
+TodosRoute.get("/", async function (request, response) {
+    try {
+        await client.connect();
+        const todosData = await client.db("managetasks").collection("todos").find().toArray();
+        await client.close();
+        return response.status(200).json({
+            message: "Todos fetched successfully",
+            data: todosData
+        })
+    } catch (error) {
+        console.log("Error occurred", error)
+    }
 })
 
 TodosRoute.get("/todo/:todoId", function (request, response) {

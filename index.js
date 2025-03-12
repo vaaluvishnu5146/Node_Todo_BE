@@ -2,6 +2,7 @@ const express = require("express");
 const cowsay = require("cowsay");
 const cors = require("cors");
 const dotenv = require("dotenv");
+require('./databaseConfig/mongooseConnectionConfig');
 dotenv.config();
 
 // Import Resources

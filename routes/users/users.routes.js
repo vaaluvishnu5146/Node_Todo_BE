@@ -1,17 +1,16 @@
-const UsersRoute = require("express").Router();
 const { v4: uuid } = require('uuid');
 
 let users = [];
 
 // GET ALL USERS
-UsersRoute.get("/", function (request, response) {
+function getAllUsers(request, response) {
     return response
         .status(200)
         .json({message: "Users fetched successfully", data: users})
-})
+}
 
 // GET A USER
-UsersRoute.get("/:userId", function (request, response) {
+function getAUser(request, response) {
     const { userId } = request.params;
     if(!userId) {
         return response.status(400).json({
@@ -29,10 +28,10 @@ UsersRoute.get("/:userId", function (request, response) {
             .json({message: "No user found"})
         }
     }
-})
+}
 
 // CREATE A USER
-UsersRoute.post("/createUser", function (request, response) {
+function createAUser(request, response) {
     const { name, email, password } = request.body;
     if(!name || !email || !password) {
         return response.status(400).json({
@@ -47,10 +46,10 @@ UsersRoute.post("/createUser", function (request, response) {
             .status(201)
             .json({message: "Users created successfully"})
     }
-});
+}
 
 // UPDATE A USER
-UsersRoute.patch("/updateUser/:userId", function (request, response) {
+function updateAUser(request, response) {
     const { userId } = request.params;
     if(!userId) {
         return response.status(400).json({
@@ -64,10 +63,10 @@ UsersRoute.patch("/updateUser/:userId", function (request, response) {
             .status(201)
             .json({message: "Users updated successfully!"})
     }
-})
+}
 
 // DELETE A USER
-UsersRoute.delete("/deleteUser/:userId", function (request, response) {
+function deleteAUser(request, response) {
     const { userId } = request.params;
     if(!userId) {
         return response.status(400).json({
@@ -80,6 +79,12 @@ UsersRoute.delete("/deleteUser/:userId", function (request, response) {
             .status(201)
             .json({message: "Users deleted successfully!"})
     }
-})
+}
 
-module.exports = UsersRoute;
+module.exports = {
+    getAllUsers,
+    getAUser,
+    createAUser,
+    updateAUser,
+    deleteAUser
+};

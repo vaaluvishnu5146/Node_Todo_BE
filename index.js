@@ -7,7 +7,7 @@ dotenv.config();
 // Import Resources
 const TodosRoute = require("./routes/todos/todos.routes");
 // Import Resources
-const UsersRoute = require("./routes/users/users.routes");
+const UsersController = require("./routes/users/users.controller");
 
 // 1. Define configs
 const configs = {
@@ -24,7 +24,7 @@ HTTP_SERVER.use(cors());
 
 // Inject Resources
 HTTP_SERVER.use('/todos', TodosRoute)
-HTTP_SERVER.use('/users', UsersRoute)
+HTTP_SERVER.use('/users', UsersController)
 
 // 3. Start and listen to server
 try {

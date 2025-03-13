@@ -22,7 +22,7 @@ async function getTodos(request, response) {
 
 async function getTodosV2(request, response) {
     try {
-        const results = await TodosModel.find();
+        const results = await TodosModel.find().populate('userId').exec();
 
         if (results.length < 1) {
             return response

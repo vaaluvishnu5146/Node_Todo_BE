@@ -6,7 +6,7 @@ require('./databaseConfig/mongooseConnectionConfig');
 dotenv.config();
 
 // Import Resources
-const TodosRoute = require("./routes/todos/todos.routes");
+const TodosRoute = require("./routes/todos/todos.controller");
 // Import Resources
 const UsersController = require("./routes/users/users.controller");
 

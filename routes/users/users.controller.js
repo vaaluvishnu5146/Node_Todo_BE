@@ -1,6 +1,7 @@
 const UsersController = require("express").Router();
 const { getAllUsers, getAUser, createAUser, updateAUser, deleteAUser } = require("./users.routes");
 
+
 // GET ALL USERS
 UsersController.get("/", getAllUsers);
 

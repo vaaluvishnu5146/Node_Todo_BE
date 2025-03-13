@@ -41,7 +41,6 @@ function getAUser(request, response) {
 async function createAUser(request, response) {
     try {
         const newUser = new Users(request.body);
-        console.log(newUser)
         const result = await newUser.save();
         return response
             .status(200)

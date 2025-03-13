@@ -1,91 +1,143 @@
-const TodosRoute = require("express").Router();
-const { v4: uuid } = require('uuid');
 const client = require("../../databaseConfig/mongodbConnectionConfig");
+const TodosModel = require("./todos.model");
+const mongoose = require("mongoose")
+const {ObjectId} = mongoose.Types
 
-let todos = [];
-
-TodosRoute.get("/", async function (request, response) {
+async function getTodos(request, response) {
     try {
         await client.connect();
-        const todosData = await client.db("managetasks").collection("todos").find().toArray();
+        const todosData = await client
+            .db("managetasks")
+            .collection("todos")
+            .find()
+            .toArray();
         await client.close();
-        return response.status(200).json({
-            message: "Todos fetched successfully",
-            data: todosData
-        })
+        return response
+            .status(200)
+            .json({message: "Todos fetched successfully", data: todosData})
     } catch (error) {
         console.log("Error occurred", error)
     }
-})
+}
 
-TodosRoute.get("/todo/:todoId", function (request, response) {
-   const { todoId } = request.params; // gets url params *required
-   const queryParams = request.query; // get query params (optional)
-   if(!todoId) {
-        return response.status(400).json({
-            message: "Necessary input is missing in request"
-        })
-   } else {
-        const matchedTodo = todos.find((todo) => todo.id === todoId);
-        if(matchedTodo) {
-            return response.status(200).json({
-                message: "Todo fetched successfully",
-                todo: matchedTodo
-            })
+async function getTodosV2(request, response) {
+    try {
+        const results = await TodosModel.find();
+
+        if (results.length < 1) {
+            return response
+                .status(200)
+                .json({message: "No Todos found", data: []})
         } else {
-            return response.status(200).json({
-                message: "No Todo found",
-                todo: matchedTodo
-            })
+            return response
+                .status(200)
+                .json({message: "Todos fetched successfully", data: results})
         }
-   }
-})
-
-TodosRoute.post("/createTodo", function (request, response) {
-    if(!request.body.title || !request.body.description) {
-        return response.status(400).json({
-            message: "Bad request",
-        })
-    } else {
-        todos.push({
-            id: uuid(),
-            ...request.body
-        })
-        return response.status(201).json({
-            message: "Todos created successfully",
-        })
+    } catch (error) {
+        console.log("Error occurred", error)
     }
-})
+}
 
-TodosRoute.patch("/updateTodo/:todoId", function (request, response) {
-    const { todoId } = request.params;
-    if(!todoId) {
-        return response.status(400).json({
-            message: "Bad request"
-        })
-    } else {
-        const filteredTodo = users.filter((user) => user.id !== todoId);
-        filteredTodo.push(request.body)
-        todos = filteredTodo;
+async function getTodoById(request, response) {
+    const {todoId} = request.params; // gets url params *required
+    if (!todoId) {
         return response
-            .status(201)
-            .json({message: "Todo updated successfully!"})
+            .status(400)
+            .json({message: "Todo Id is missing in request"})
+    } else {
+        const result = await TodosModel.findOne({_id: new ObjectId(todoId)});
+        if (result) {
+            return response
+                .status(200)
+                .json({message: "Todo fetched successfully", data: result})
+        } else {
+            return response
+                .status(200)
+                .json({message: "Todo not found", data: {}})
+        }
     }
-})
+}
 
-TodosRoute.delete("/deleteTodo/:todoId", function (request, response) {
-    const {todoId} = request.params;
-    if(!todoId) {
-        return response.status(400).json({
-            message: "Necessary input is missing in request"
-        })
-   } else {
-        const filteredTodos = todos.filter((todo) => todo.id !== todoId);
-        todos = filteredTodos;
-        return response.status(200).json({
-            message: "Todos deleted successfully",
-        })
-   }
-})
+async function createTodo(request, response) {
+    try {
+        const todo = new TodosModel(request.body);
+        const acknowledgement = await todo.save();
+        if (acknowledgement) {
+            return response
+                .status(201)
+                .json({message: "Todos created successfully"})
+        } else {
+            return response
+                .status(206)
+                .json({message: "Todo could not be created"})
+        }
+    } catch (error) {
+        return response
+            .status(500)
+            .json({message: "Something went wrong", error: error})
+    }
+}
 
-module.exports = TodosRoute;
+async function updateTodo(request, response) {
+    try {
+        const {todoId} = request.params;
+        if (!todoId) {
+            return response
+                .status(400)
+                .json({message: "Bad request"})
+        } else {
+            console.log("Here =====>")
+            const acknowledgement = await TodosModel.findByIdAndUpdate(
+                todoId, request.body, { new: true })
+            if (acknowledgement) {
+                return response
+                    .status(201)
+                    .json({message: "Todo updated successfully!", data: acknowledgement})
+            } else {
+                return response
+                    .status(200)
+                    .json({message: "Todo cannot be updated!", data: acknowledgement})
+            }
+        }
+    } catch(error) {
+        return response
+            .status(500)
+            .json({message: "Something went wrong", error: error})
+    }
+}
+
+async function deleteTodo(request, response) {
+    try {
+        const {todoId} = request.params;
+        if (!todoId) {
+            return response
+                .status(400)
+                .json({message: "Necessary input is missing in request"})
+        } else {
+            const  acknowledgement = await TodosModel.findByIdAndDelete({ _id: new ObjectId(todoId) });
+            console.log(acknowledgement)
+            if(acknowledgement) {
+                return response
+                    .status(200)
+                    .json({message: "Todos deleted successfully"})
+            } else {
+                return response
+                    .status(200)
+                    .json({message: "Todos is either deleted already or not available"})
+            }
+        }
+    } catch(error) {
+        return response
+            .status(500)
+            .json({message: "Something went wrong", error: error})
+    }
+}
+
+module.exports = {
+    getTodos,
+    getTodosV2,
+    getTodoById,
+    createTodo,
+    updateTodo,
+    deleteTodo
+};

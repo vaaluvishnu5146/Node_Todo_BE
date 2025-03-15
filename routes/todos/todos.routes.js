@@ -56,7 +56,7 @@ TodosRoute.patch("/updateTodo/:todoId", function (request, response) {
             message: "Bad request"
         })
     } else {
-        const filteredTodo = users.filter((user) => user.id !== todoId);
+        const filteredTodo = todos.filter((user) => user.id !== todoId);
         filteredTodo.push(request.body)
         todos = filteredTodo;
         return response

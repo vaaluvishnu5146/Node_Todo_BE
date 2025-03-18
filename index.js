@@ -2,13 +2,15 @@ const express = require("express");
 const cowsay = require("cowsay");
 const cors = require("cors");
 const dotenv = require("dotenv");
-require('./databaseConfig/mongooseConnectionConfig');
 dotenv.config();
+require('./databaseConfig/mongooseConnectionConfig');
 
 // Import Resources
 const TodosRoute = require("./routes/todos/todos.controller");
 // Import Resources
 const UsersController = require("./routes/users/users.controller");
+const NotificationsController = require("./routes/notifications/notification.controller");
+const { logRequest, checkTokenInHeader } = require("./routes/middlwares/Authentication.midddleware");
 
 // 1. Define configs
 const configs = {
@@ -24,8 +26,9 @@ HTTP_SERVER.use(express.json());
 HTTP_SERVER.use(cors());
 
 // Inject Resources
-HTTP_SERVER.use('/todos', TodosRoute)
-HTTP_SERVER.use('/users', UsersController)
+HTTP_SERVER.use('/todos', logRequest, TodosRoute)
+HTTP_SERVER.use('/users', logRequest, UsersController)
+HTTP_SERVER.use('/v1/notifications', logRequest, checkTokenInHeader, NotificationsController)
 
 // 3. Start and listen to server
 try {

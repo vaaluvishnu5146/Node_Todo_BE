@@ -5,7 +5,7 @@ const cowsay = require("cowsay");
 const dbName = "managetasks"
 
 // Connection URi
-const uri = `mongodb://localhost:27017/${dbName}`;
+const uri = process.env.NODE_ENV === "local" ? `mongodb://localhost:27017/${dbName}` : process.env.MONGODB_ATLAS_DB;
 
 mongoose.connect(uri)
 .then((response) => {

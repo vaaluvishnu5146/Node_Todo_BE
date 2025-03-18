@@ -26,7 +26,7 @@ async function createJWTToken(payload) {
     try {
         const token = await jwt.sign(payload, SECRET_KEY, {
             algorithm: "HS256",
-            expiresIn: '1h'
+            expiresIn: '1m'
         })
         console.log(token)
         return token;
@@ -35,8 +35,26 @@ async function createJWTToken(payload) {
     }
 }
 
+async function verifyJWTToken(token) {
+    let isvalid = false;
+    try {
+        if(token) {
+            jwt.verify(token, SECRET_KEY, function (error, decoded) {
+                if(!error && decoded) {
+                    isvalid = true
+                }
+            })
+        }
+    } catch (error) {
+        // skip
+        console.log(error)
+    }
+    return isvalid;
+}
+
 module.exports = {
     createHashFromPassword,
     isPasswordMatching,
-    createJWTToken
+    createJWTToken,
+    verifyJWTToken
 };

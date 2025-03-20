@@ -72,8 +72,6 @@ async function createAccount(request, response) {
 // SIGNIN USER
 async function signinUser(request, response) {
     try {
-        console.log("HIIT")
-        console.log(request.body)
         const { email, password } = request.body;
         // First layer of defence
         if(!email || !password) {
@@ -98,12 +96,13 @@ async function signinUser(request, response) {
             .json({message: "Bad credentials", error: "Password isn't matching"})
         }
 
-        const token = await createJWTToken({ _id: matchingUser._id, email: matchingUser.email })
+        const token = await createJWTToken({ _id: matchingUser._id, email: matchingUser.email, role: matchingUser.role })
 
         response.header("Authorization", token);
         
         return response.status(200).json({
-            message: "Login successful"
+            message: "Login successful",
+            _tk: token
         });
 
     

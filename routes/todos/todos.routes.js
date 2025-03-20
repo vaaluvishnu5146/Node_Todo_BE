@@ -38,6 +38,29 @@ async function getTodosV2(request, response) {
     }
 }
 
+async function getTodosByUserId(request, response) {
+    const { userId } = request.params;
+    try {
+        const results = await TodosModel.find({ userId: userId }).populate({path: 'userId', select: 'name -_id'}).exec();
+        if(results.length > 0) {
+            return response.status(200).json({
+                message: "Todos fetched successfully",
+                data: results
+            })
+        } else {
+            return response.status(200).json({
+                message: "No Todos Found",
+                data: results
+            })
+        }
+    } catch (error) {
+        return response.status(500).json({
+            message: "Something went wrong",
+            error: error.message
+        })
+    }
+}
+
 async function getTodoById(request, response) {
     const {todoId} = request.params; // gets url params *required
     if (!todoId) {
@@ -74,7 +97,7 @@ async function createTodo(request, response) {
     } catch (error) {
         return response
             .status(500)
-            .json({message: "Something went wrong", error: error})
+            .json({message: "Something went wrong", error: error.message})
     }
 }
 
@@ -139,5 +162,6 @@ module.exports = {
     getTodoById,
     createTodo,
     updateTodo,
-    deleteTodo
+    deleteTodo,
+    getTodosByUserId
 };

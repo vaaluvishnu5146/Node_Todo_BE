@@ -10,7 +10,9 @@ const TodosRoute = require("./routes/todos/todos.controller");
 // Import Resources
 const UsersController = require("./routes/users/users.controller");
 const NotificationsController = require("./routes/notifications/notification.controller");
-const { logRequest, checkTokenInHeader } = require("./routes/middlwares/Authentication.midddleware");
+const { logRequest, checkTokenInHeader, checkIsUserAdmin } = require("./routes/middlwares/Authentication.midddleware");
+const AuthenticationController = require("./routes/authentication/Authentication.controller");
+const ReportsController = require("./routes/reports/Reports.controller");
 
 // 1. Define configs
 const configs = {
@@ -26,9 +28,12 @@ HTTP_SERVER.use(express.json());
 HTTP_SERVER.use(cors());
 
 // Inject Resources
-HTTP_SERVER.use('/todos', logRequest, TodosRoute)
+HTTP_SERVER.use('/v1/auth', logRequest, AuthenticationController)
 HTTP_SERVER.use('/users', logRequest, UsersController)
+HTTP_SERVER.use('/todos', logRequest, checkTokenInHeader, TodosRoute)
 HTTP_SERVER.use('/v1/notifications', logRequest, checkTokenInHeader, NotificationsController)
+HTTP_SERVER.use('/v1/reports', logRequest, checkTokenInHeader, checkIsUserAdmin, ReportsController)
+
 
 // 3. Start and listen to server
 try {

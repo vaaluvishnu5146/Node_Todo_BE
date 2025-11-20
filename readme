@@ -9,25 +9,35 @@ npm install
 npm start
 
 # API
+
 ## 1.Heart beat
+
 http://localhost:3000
 
 ## 2. Get All Todos
-http://localhost:3000/todos
 
-## 3. Create a Todos
-http://localhost:3000/createTodo
+http://localhost:3000/todos?isDeleted=true
+
+http://localhost:3000/todos?isDeleted=false
+
+## 3. Create a Todos (POST)
+
+http://localhost:3000/todos/createTodo
 
 ## 4. Update a Todos
-http://localhost:3000/updateTodo/:todoId
+
+http://localhost:3000/todos/updateTodo/:todoId
 
 ## 5. Delete a Todos
-http://localhost:3000/deleteTodo/:todoId
+
+http://localhost:3000/todos/deleteTodo/:todoId
 
 # Create .env file
+
 Simple create .env file in root of project
 
 ## And add below data into .env:
+
 NODE_ENV = production
 HOSTNAME = localhost
 PORT = 3000
